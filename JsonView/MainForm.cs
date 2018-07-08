@@ -7,6 +7,10 @@ using System.Text;
 using System.Windows.Forms;
 using EPocalipse.Json.Viewer;
 using System.IO;
+using System.Net;
+using RestMan.RestClient;
+using RestSharp;
+using RestSharp.Authenticators;
 
 namespace EPocalipse.Json.JsonView
 {
@@ -256,6 +260,49 @@ namespace EPocalipse.Json.JsonView
             {
                 Clipboard.SetText(node.JsonObject.Value.ToString());
             }
+        }
+
+
+        /// <summary>
+        /// 开始请求
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string endPoint = txtEndPoint.Text;
+            string resource = txtResource.Text;
+            string reqHeader = richRequestHeader.Text;
+            string reqbody = richReqBody.Text;
+
+            IAuthenticator iaAuthenticator = new HttpBasicAuthenticator("", "");
+            IRestSharp iRestSharp = new RestSharpClient(endPoint, iaAuthenticator);
+            IRestRequest iRequest = new RestRequest(new Uri(resource), Method.POST);
+            iRequest.Method = (Method)Enum.Parse(typeof(Method), cbMethod.Text);
+           
+           // iRequest.AddBody(body);
+
+            //var postdata = new
+            //{
+            //    username = "yanyangtian",
+            //    password = "123456",
+            //    nickname = "艳阳天"
+            //};
+
+          //  var postdata = iRequest.JsonSerializer.(reqbody);
+           // var json = iRequest.JsonSerializer.Serialize(postdata);
+            iRequest.AddParameter("application/json; charset=utf-8", reqbody, ParameterType.RequestBody);
+
+            IRestResponse iResponse = iRestSharp.Execute(iRequest);
+
+            string headerStr = "";
+            foreach (Parameter parameter in iResponse.Headers)
+            {
+                headerStr += parameter.Name + ":" + parameter.Value + "/n";
+            }
+            richResHeader.Text = headerStr.Trim(':');
+
+            JsonViewer.Json = iResponse.Content;
         }
     }
 }
