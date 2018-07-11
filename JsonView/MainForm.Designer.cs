@@ -28,6 +28,7 @@ namespace EPocalipse.Json.JsonView
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,8 +52,13 @@ namespace EPocalipse.Json.JsonView
             this.copyValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutJSONViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.JsonViewer = new EPocalipse.Json.Viewer.JsonViewer();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.新增ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.重命名ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.新增APIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.txtEndPoint = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbMethod = new System.Windows.Forms.ComboBox();
@@ -61,7 +67,6 @@ namespace EPocalipse.Json.JsonView
             this.txtResource = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.richReqBody = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.cbMediaType = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -70,10 +75,14 @@ namespace EPocalipse.Json.JsonView
             this.Password = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.richResHeader = new System.Windows.Forms.TextBox();
-            this.richRequestHeader = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.JsonViewer = new EPocalipse.Json.Viewer.JsonViewer();
+            this.richResHeader = new System.Windows.Forms.RichTextBox();
+            this.richReqBody = new System.Windows.Forms.RichTextBox();
+            this.richReqHeader = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -180,7 +189,6 @@ namespace EPocalipse.Json.JsonView
             this.pasteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pasteToolStripMenuItem.Image")));
             this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.pasteToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
@@ -276,23 +284,63 @@ namespace EPocalipse.Json.JsonView
             this.aboutJSONViewerToolStripMenuItem.Text = "About JSON Viewer";
             this.aboutJSONViewerToolStripMenuItem.Click += new System.EventHandler(this.aboutJSONViewerToolStripMenuItem_Click);
             // 
-            // JsonViewer
-            // 
-            this.JsonViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.JsonViewer.Json = "";
-            this.JsonViewer.Location = new System.Drawing.Point(636, 270);
-            this.JsonViewer.Name = "JsonViewer";
-            this.JsonViewer.Size = new System.Drawing.Size(593, 465);
-            this.JsonViewer.TabIndex = 0;
-            // 
             // treeView1
             // 
+            this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
+            this.treeView1.ImageKey = "folder16.png";
+            this.treeView1.ImageList = this.imageList1;
             this.treeView1.Location = new System.Drawing.Point(12, 28);
             this.treeView1.Name = "treeView1";
+            this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(186, 706);
             this.treeView1.TabIndex = 0;
+            this.treeView1.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_AfterLabelEdit);
+            this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.新增ToolStripMenuItem,
+            this.新增APIToolStripMenuItem,
+            this.删除ToolStripMenuItem,
+            this.重命名ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(120, 92);
+            // 
+            // 新增ToolStripMenuItem
+            // 
+            this.新增ToolStripMenuItem.Name = "新增ToolStripMenuItem";
+            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.新增ToolStripMenuItem.Text = "新增";
+            this.新增ToolStripMenuItem.Click += new System.EventHandler(this.新增ToolStripMenuItem_Click);
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.删除ToolStripMenuItem.Text = "删除";
+            this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
+            // 
+            // 重命名ToolStripMenuItem
+            // 
+            this.重命名ToolStripMenuItem.Name = "重命名ToolStripMenuItem";
+            this.重命名ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.重命名ToolStripMenuItem.Text = "重命名";
+            this.重命名ToolStripMenuItem.Click += new System.EventHandler(this.重命名ToolStripMenuItem_Click);
+            // 
+            // 新增APIToolStripMenuItem
+            // 
+            this.新增APIToolStripMenuItem.Name = "新增APIToolStripMenuItem";
+            this.新增APIToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.新增APIToolStripMenuItem.Text = "新增API";
+            this.新增APIToolStripMenuItem.Click += new System.EventHandler(this.新增APIToolStripMenuItem_Click);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "folder16.png");
+            this.imageList1.Images.SetKeyName(1, "file16.png");
             // 
             // txtEndPoint
             // 
@@ -321,7 +369,7 @@ namespace EPocalipse.Json.JsonView
             this.cbMethod.Location = new System.Drawing.Point(273, 31);
             this.cbMethod.Name = "cbMethod";
             this.cbMethod.Size = new System.Drawing.Size(102, 20);
-            this.cbMethod.TabIndex = 3;
+            this.cbMethod.TabIndex = 0;
             // 
             // label2
             // 
@@ -346,7 +394,7 @@ namespace EPocalipse.Json.JsonView
             this.txtResource.Location = new System.Drawing.Point(773, 32);
             this.txtResource.Name = "txtResource";
             this.txtResource.Size = new System.Drawing.Size(232, 21);
-            this.txtResource.TabIndex = 6;
+            this.txtResource.TabIndex = 2;
             // 
             // button1
             // 
@@ -366,14 +414,6 @@ namespace EPocalipse.Json.JsonView
             this.button2.TabIndex = 8;
             this.button2.Text = "停止";
             this.button2.UseVisualStyleBackColor = true;
-            // 
-            // richReqBody
-            // 
-            this.richReqBody.Location = new System.Drawing.Point(212, 441);
-            this.richReqBody.Multiline = true;
-            this.richReqBody.Name = "richReqBody";
-            this.richReqBody.Size = new System.Drawing.Size(418, 293);
-            this.richReqBody.TabIndex = 9;
             // 
             // label4
             // 
@@ -415,21 +455,21 @@ namespace EPocalipse.Json.JsonView
             this.cbAuthType.Location = new System.Drawing.Point(273, 68);
             this.cbAuthType.Name = "cbAuthType";
             this.cbAuthType.Size = new System.Drawing.Size(86, 20);
-            this.cbAuthType.TabIndex = 13;
+            this.cbAuthType.TabIndex = 3;
             // 
             // UserName
             // 
             this.UserName.Location = new System.Drawing.Point(419, 65);
             this.UserName.Name = "UserName";
             this.UserName.Size = new System.Drawing.Size(110, 21);
-            this.UserName.TabIndex = 14;
+            this.UserName.TabIndex = 4;
             // 
             // Password
             // 
             this.Password.Location = new System.Drawing.Point(592, 65);
             this.Password.Name = "Password";
             this.Password.Size = new System.Drawing.Size(100, 21);
-            this.Password.TabIndex = 15;
+            this.Password.TabIndex = 5;
             // 
             // label6
             // 
@@ -449,22 +489,6 @@ namespace EPocalipse.Json.JsonView
             this.label7.TabIndex = 17;
             this.label7.Text = "密码:";
             // 
-            // richResHeader
-            // 
-            this.richResHeader.Location = new System.Drawing.Point(636, 114);
-            this.richResHeader.Multiline = true;
-            this.richResHeader.Name = "richResHeader";
-            this.richResHeader.Size = new System.Drawing.Size(581, 150);
-            this.richResHeader.TabIndex = 18;
-            // 
-            // richRequestHeader
-            // 
-            this.richRequestHeader.Location = new System.Drawing.Point(212, 114);
-            this.richRequestHeader.Multiline = true;
-            this.richRequestHeader.Name = "richRequestHeader";
-            this.richRequestHeader.Size = new System.Drawing.Size(418, 276);
-            this.richRequestHeader.TabIndex = 19;
-            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(709, 65);
@@ -474,14 +498,63 @@ namespace EPocalipse.Json.JsonView
             this.button3.Text = "选择";
             this.button3.UseVisualStyleBackColor = true;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(1145, 74);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(58, 23);
+            this.button4.TabIndex = 21;
+            this.button4.Text = "保存";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // JsonViewer
+            // 
+            this.JsonViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.JsonViewer.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
+            this.JsonViewer.CausesValidation = false;
+            this.JsonViewer.Json = "";
+            this.JsonViewer.Location = new System.Drawing.Point(636, 270);
+            this.JsonViewer.Name = "JsonViewer";
+            this.JsonViewer.Size = new System.Drawing.Size(593, 465);
+            this.JsonViewer.TabIndex = 5;
+            // 
+            // richResHeader
+            // 
+            this.richResHeader.Location = new System.Drawing.Point(636, 114);
+            this.richResHeader.Name = "richResHeader";
+            this.richResHeader.Size = new System.Drawing.Size(593, 150);
+            this.richResHeader.TabIndex = 22;
+            this.richResHeader.Text = "";
+            // 
+            // richReqBody
+            // 
+            this.richReqBody.Location = new System.Drawing.Point(212, 455);
+            this.richReqBody.Name = "richReqBody";
+            this.richReqBody.Size = new System.Drawing.Size(418, 279);
+            this.richReqBody.TabIndex = 23;
+            this.richReqBody.Text = "";
+            // 
+            // richReqHeader
+            // 
+            this.richReqHeader.Location = new System.Drawing.Point(212, 114);
+            this.richReqHeader.Name = "richReqHeader";
+            this.richReqHeader.Size = new System.Drawing.Size(418, 293);
+            this.richReqHeader.TabIndex = 24;
+            this.richReqHeader.Text = "";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1229, 746);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.richRequestHeader);
+            this.Controls.Add(this.richReqHeader);
+            this.Controls.Add(this.richReqBody);
             this.Controls.Add(this.richResHeader);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.Password);
@@ -490,7 +563,6 @@ namespace EPocalipse.Json.JsonView
             this.Controls.Add(this.label5);
             this.Controls.Add(this.cbMediaType);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.richReqBody);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.txtResource);
@@ -509,6 +581,7 @@ namespace EPocalipse.Json.JsonView
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -548,7 +621,6 @@ namespace EPocalipse.Json.JsonView
         private System.Windows.Forms.TextBox txtResource;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox richReqBody;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbMediaType;
         private System.Windows.Forms.Label label5;
@@ -557,9 +629,17 @@ namespace EPocalipse.Json.JsonView
         private System.Windows.Forms.TextBox Password;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox richResHeader;
-        private System.Windows.Forms.TextBox richRequestHeader;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 新增ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 重命名ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 新增APIToolStripMenuItem;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.RichTextBox richResHeader;
+        private System.Windows.Forms.RichTextBox richReqBody;
+        private System.Windows.Forms.RichTextBox richReqHeader;
     }
 }
 

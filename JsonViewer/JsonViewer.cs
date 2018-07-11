@@ -21,7 +21,6 @@ namespace EPocalipse.Json.Viewer
         private PluginsManager _pluginsManager = new PluginsManager();
         bool _updating;
         Control _lastVisualizerControl;
-        private bool ignoreSelChange;
 
         public JsonViewer()
         {
@@ -108,7 +107,7 @@ namespace EPocalipse.Json.Viewer
         private void GetParseErrorDetails(Exception parserError)
         {
             UnbufferedStringReader strReader = new UnbufferedStringReader(_json);
-            using (JsonReader reader = new JsonReader(strReader))
+            using (JsonReader reader = new JsonTextReader(strReader))
             {
                 try
                 {
@@ -131,16 +130,8 @@ namespace EPocalipse.Json.Viewer
 
         private void MarkError(ErrorDetails _errorDetails)
         {
-            ignoreSelChange = true;
-            try
-            {
-                txtJson.Select(Math.Max(0, _errorDetails.Position - 1), 10);
-                txtJson.ScrollToCaret();
-            }
-            finally
-            {
-                ignoreSelChange = false;
-            }
+            txtJson.Select(Math.Max(0, _errorDetails.Position - 1), 10);
+            txtJson.ScrollToCaret();
         }
 
         private void VisualizeJsonTree(JsonObjectTree tree)
@@ -167,7 +158,6 @@ namespace EPocalipse.Json.Viewer
             }
         }
 
-        [Browsable(false)]
         public ErrorDetails ErrorDetails
         {
             get
@@ -203,7 +193,6 @@ namespace EPocalipse.Json.Viewer
             lblError.Text = String.Empty;
         }
 
-        [Browsable(false)]
         public bool HasErrors
         {
             get
@@ -215,7 +204,6 @@ namespace EPocalipse.Json.Viewer
         private void txtJson_TextChanged(object sender, EventArgs e)
         {
             Json = txtJson.Text;
-            btnViewSelected.Checked = false;
         }
 
         private void txtFind_TextChanged(object sender, EventArgs e)
@@ -349,12 +337,12 @@ namespace EPocalipse.Json.Viewer
             {
                 string json = txtJson.Text;
                 JsonSerializer s = new JsonSerializer();
-                JsonReader reader = new JsonReader(new StringReader(json));
+                JsonReader reader = new JsonTextReader(new StringReader(json));
                 Object jsonObject = s.Deserialize(reader);
                 if (jsonObject != null)
                 {
                     StringWriter sWriter = new StringWriter();
-                    JsonWriter writer = new JsonWriter(sWriter);
+                    JsonTextWriter writer = new JsonTextWriter(sWriter);
                     writer.Formatting = Formatting.Indented;
                     writer.Indentation = 4;
                     writer.IndentChar = ' ';
@@ -606,33 +594,12 @@ namespace EPocalipse.Json.Viewer
             }
         }
 
-        private void mnuCopyName_Click(object sender, EventArgs e)
-        {
-            JsonViewerTreeNode node = GetSelectedTreeNode();
-
-            if (node != null && node.JsonObject.Id != null)
-            {
-                JsonObject obj = node.Tag as JsonObject;
-                Clipboard.SetText(obj.Id);
-            }
-            else
-            {
-                Clipboard.SetText("");
-            }
-
-        }
-
         private void mnuCopyValue_Click(object sender, EventArgs e)
         {
             JsonViewerTreeNode node = GetSelectedTreeNode();
-            if (node != null && node.Tag != null)
+            if (node != null && node.JsonObject.Value != null)
             {
-                JsonObject obj = node.Tag as JsonObject;
-                Clipboard.SetText(obj.Value.ToString());
-            }
-            else
-            {
-                Clipboard.SetText("null");
+                Clipboard.SetText(node.JsonObject.Value.ToString());
             }
         }
 
@@ -665,24 +632,6 @@ namespace EPocalipse.Json.Viewer
                 text = text.Replace(ch.ToString(), "");
             }
             txtJson.Text = text;
-        }
-
-        private void btnViewSelected_Click(object sender, EventArgs e)
-        {
-            if (btnViewSelected.Checked)
-                _json = txtJson.SelectedText.Trim();
-            else
-                _json = txtJson.Text.Trim();
-            Redraw();
-        }
-
-        private void txtJson_SelectionChanged(object sender, EventArgs e)
-        {
-            if (btnViewSelected.Checked && !ignoreSelChange)
-            {
-                _json = txtJson.SelectedText.Trim();
-                Redraw();
-            }
         }
     }
 
