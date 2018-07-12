@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Db\AuthManage.cs" />
     <Compile Include="Db\FolderManage.cs" />
     <Compile Include="Db\Project.cs" />
     <Compile Include="Db\RestInfo.cs" />

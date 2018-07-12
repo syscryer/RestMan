@@ -1,7 +1,10 @@
-﻿namespace RestMan.DbUtil
+﻿using System;
+using System.Net.Mime;
+
+namespace RestMan.DbUtil
 {
     public class Config
     {
-        public static string ConnectionString = "Data Source=|DataDirectory|D:\\Project\\JsonViewer\\RestMan.DbUtil\\DB\\RestMan.db;Pooling=true;FailIfMissing=false";
+        public static string ConnectionString = "Data Source=|DataDirectory|"+AppContext.BaseDirectory+"DB\\RestMan.db;Pooling=true;FailIfMissing=false";
     }
 }

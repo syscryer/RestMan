@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 using EPocalipse.Json.Viewer;
 using RestMan.DbUtil;
@@ -17,6 +18,8 @@ namespace EPocalipse.Json.JsonView
     public partial class MainForm : Form
     {
         private bool _isReName;
+
+        private RestInfo _restInfo;
 
         private bool isAddApi;
 
@@ -33,6 +36,7 @@ namespace EPocalipse.Json.JsonView
         private void treeView1_DrawNode(object sender, DrawTreeNodeEventArgs e)
         {
             e.DrawDefault = true; //我这里用默认颜色即可，只需要在TreeView失去焦点时选中节点仍然突显
+
             return;
             if ((e.State & TreeNodeStates.Selected) != 0)
             {
@@ -91,10 +95,7 @@ namespace EPocalipse.Json.JsonView
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            var list = DbContext.DbClient.Queryable<FolderManage>().ToList();
-            var restInfos = DbContext.DbClient.Queryable<RestInfo>().ToList();
-            Bind_Tv(list, restInfos, treeView1.Nodes, "-1");
-            treeView1.ExpandAll();
+            BindTree();
             var args = Environment.GetCommandLineArgs();
             for (var i = 1; i < args.Length; i++)
             {
@@ -103,6 +104,15 @@ namespace EPocalipse.Json.JsonView
                     LoadFromClipboard();
                 else if (File.Exists(arg)) LoadFromFile(arg);
             }
+        }
+
+        private void BindTree()
+        {
+            treeView1.Nodes.Clear();
+            var list = DbContext.DbClient.Queryable<FolderManage>().ToList();
+            var restInfos = DbContext.DbClient.Queryable<RestInfo>().ToList();
+            Bind_Tv(list, restInfos, treeView1.Nodes, "-1");
+            treeView1.ExpandAll();
         }
 
         private void LoadFromFile(string fileName)
@@ -175,7 +185,7 @@ namespace EPocalipse.Json.JsonView
         {
             Control c;
             c = JsonViewer.Controls.Find("txtJson", true)[0];
-            ((RichTextBox)c).SelectAll();
+            ((TextBox)c).SelectAll();
         }
 
         /// <summary>
@@ -189,11 +199,11 @@ namespace EPocalipse.Json.JsonView
             Control c;
             c = JsonViewer.Controls.Find("txtJson", true)[0];
             string text;
-            if (((RichTextBox)c).SelectionLength > 0)
-                text = ((RichTextBox)c).SelectedText;
+            if (((TextBox)c).SelectionLength > 0)
+                text = ((TextBox)c).SelectedText;
             else
-                text = ((RichTextBox)c).Text;
-            ((RichTextBox)c).SelectedText = "";
+                text = ((TextBox)c).Text;
+            ((TextBox)c).SelectedText = "";
         }
 
         /// <summary>
@@ -206,7 +216,7 @@ namespace EPocalipse.Json.JsonView
         {
             Control c;
             c = JsonViewer.Controls.Find("txtJson", true)[0];
-            ((RichTextBox)c).Paste();
+            ((TextBox)c).Paste();
         }
 
         /// <summary>
@@ -219,7 +229,7 @@ namespace EPocalipse.Json.JsonView
         {
             Control c;
             c = JsonViewer.Controls.Find("txtJson", true)[0];
-            ((RichTextBox)c).Copy();
+            ((TextBox)c).Copy();
         }
 
         /// <summary>
@@ -232,7 +242,7 @@ namespace EPocalipse.Json.JsonView
         {
             Control c;
             c = JsonViewer.Controls.Find("txtJson", true)[0];
-            ((RichTextBox)c).Cut();
+            ((TextBox)c).Cut();
         }
 
         /// <summary>
@@ -245,7 +255,7 @@ namespace EPocalipse.Json.JsonView
         {
             Control c;
             c = JsonViewer.Controls.Find("txtJson", true)[0];
-            ((RichTextBox)c).Undo();
+            ((TextBox)c).Undo();
         }
 
         /// <summary>
@@ -330,35 +340,133 @@ namespace EPocalipse.Json.JsonView
         {
             try
             {
-                var endPoint = txtEndPoint.Text;
-                var resource = txtResource.Text;
-                var reqHeader = richReqHeader.Text;
+                toolStripStatusState.Text = "请求中...";
+                var endPoint = txtEndPoint.Text.Trim();
+                var resource = txtResource.Text.Trim();
                 var reqbody = richReqBody.Text;
+                var userName = txtUserName.Text.Trim();
+                var pwd = txtPassword.Text.Trim();
+                var authType = cbAuthType.Text;
+                var mediaType = cbMediaType.Text;
                 SaveRestInfo();
+                IAuthenticator iaAuthenticator;
+                if (authType == "NTLM")
+                {
+                    ICredentials ic = new NetworkCredential(userName, pwd);
+                    iaAuthenticator = new NtlmAuthenticator(ic);
+                }
+                else if (authType == "Basic")
+                {
+                    iaAuthenticator = new HttpBasicAuthenticator(userName, pwd);
+                }
+                else
+                {
+                    //TODO
+                    iaAuthenticator = new HttpBasicAuthenticator(userName, pwd);
+                    //iaAuthenticator = new SimpleAuthenticator(userName, pwd);(userName, pwd);
+                }
 
-                IAuthenticator iaAuthenticator = new HttpBasicAuthenticator("", "");
+                if (string.IsNullOrEmpty(resource))
+                {
+                    Uri uri = new Uri(endPoint);
+                    resource = uri.AbsolutePath;
+                    endPoint = uri.AbsoluteUri.Replace(resource, "");
+                }
                 IRestSharp iRestSharp = new RestSharpClient(endPoint, iaAuthenticator);
                 IRestRequest iRequest = new RestRequest(new Uri(endPoint + resource));
                 iRequest.Method = (Method)Enum.Parse(typeof(Method), cbMethod.Text);
 
-                iRequest.AddParameter("application/json; charset=utf-8", reqbody, ParameterType.RequestBody);
-
-                var iResponse = iRestSharp.Execute(iRequest);
-
-                var headerStr = "";
-                foreach (var parameter in iResponse.Headers)
+                foreach (var line in richReqHeader.Lines)
                 {
-                    headerStr += parameter.Name + ":" + parameter.Value + "\n";
+                    var val = line.Trim();
+                    if (val.Contains(":"))
+                    {
+                        var firstIndex = val.IndexOf(":", StringComparison.Ordinal);
+                        var key = val.Substring(0, firstIndex);
+                        var value = val.Substring(firstIndex + 1, val.Length - firstIndex - 1);
+                        iRequest.AddHeader(key, value);
+                    }
+                    else if (string.IsNullOrEmpty(val))
+                    {
+                    }
+                    else
+                    {
+                        MessageBox.Show("填写的请求头参数不正确");
+                    }
                 }
-                richResHeader.Text = headerStr.Trim(':');
 
-                JsonViewer.Json = iResponse.Content;
+                if (!string.IsNullOrEmpty(mediaType))
+                {
+                    iRequest.AddParameter(mediaType, reqbody, ParameterType.RequestBody);
+                }
+                //var iResponse = iRestSharp.Execute(iRequest);
+
+
+                var asyncHandle = iRestSharp.ExecuteAsync(iRequest, response =>
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        toolStripStatusState.Text = response.ResponseStatus.ToString();
+                    }));
+                    var headerStr = "";
+                    foreach (var parameter in response.Headers) headerStr += parameter.Name + ":" + parameter.Value + "\n";
+
+                    richExcutReq.Invoke(new Action(() =>
+                    {
+                        richExcutReq.Clear();
+                        string reqContentType = "", reqBody = "";
+                        foreach (var requestParameter in response.Request.Parameters)
+                        {
+                            if (requestParameter.Type == ParameterType.RequestBody)
+                            {
+                                reqContentType = requestParameter.Name;
+                                reqBody = requestParameter.Value.ToString();
+                            }
+                            else
+                            {
+                                richExcutReq.AppendText(requestParameter.Name + ":" + requestParameter.Value + "\n");
+                            }
+                        }
+                        richExcutReq.AppendText("\n*****************************" + reqContentType + "*******************************\n");
+                        richExcutReq.AppendText(reqBody);
+                    }));
+                    this.Invoke(new Action(() =>
+                    {
+                        richResHeader.Text = headerStr.Trim(':');
+                        lbResCode.Text = Convert.ToInt32(response.StatusCode) + " " + response.StatusCode;
+                        lbResCode.ForeColor = response.StatusCode == HttpStatusCode.OK ? Color.Green : Color.Red;
+                    }));
+                    JsonViewer.Invoke(new Action(() =>
+                    {
+                        JsonViewer.Json = response.Content;
+                        toolStripStatusState.Text = response.ResponseStatus.ToString();
+                    }));
+                });
+                // abort the request on demand
+                //asyncHandle.Abort();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "请求失败，请检查配置信息");
             }
         }
+
+        public static void RunAsync(Action action)
+        {
+            ((Action)(delegate ()
+            {
+                action.Invoke();
+            })).BeginInvoke(null, null);
+        }
+
+        public void RunInMainthread(Action action)
+        {
+            this.BeginInvoke((Action)(delegate ()
+            {
+                action.Invoke();
+            }));
+        }
+
 
         private void 新增ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -382,21 +490,31 @@ namespace EPocalipse.Json.JsonView
         //新增插入数据
         private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            e.Node.EndEdit(false);
+            if (e.Label == null)
+            {
+                return;
+            }
+
+            var newValue = e.Label;
+            if (string.IsNullOrEmpty(newValue))
+            {
+                newValue = e.Node.Text;
+            }
+
             var item = e.Node.Tag as FolderManage;
             var restInfo1 = e.Node.Tag as RestInfo;
             if (isAddApi)
             {
                 try
                 {
-                    if (item != null)
+                    if (e.Node.Parent.Tag is FolderManage pFolder)
                     {
-                        var folder = new RestInfo
+                        var restInfo = new RestInfo
                         {
-                            Name = e.Label,
-                            FolderId = item.ID
+                            Name = newValue,
+                            FolderId = pFolder.ID
                         };
-                        DbContext.DbClient.Insertable(folder).ExecuteCommand();
+                        DbContext.DbClient.Insertable(restInfo).ExecuteCommand();
                     }
                 }
                 catch (Exception)
@@ -412,14 +530,16 @@ namespace EPocalipse.Json.JsonView
                 {
                     if (item != null)
                     {
-                        item.FolderName = e.Label;
+                        item.FolderName = newValue;
                         DbContext.DbClient.Updateable(item).ExecuteCommand();
                     }
+
                     if (restInfo1 != null)
                     {
-                        restInfo1.Name = e.Label;
+                        restInfo1.Name = newValue;
                         DbContext.DbClient.Updateable(restInfo1).ExecuteCommand();
                     }
+
                     _isReName = false;
                 }
                 else
@@ -428,7 +548,7 @@ namespace EPocalipse.Json.JsonView
                     {
                         var folder = new FolderManage
                         {
-                            FolderName = e.Label,
+                            FolderName = newValue,
                             PID = item.ID,
                             GroupId = item.GroupId
                         };
@@ -436,14 +556,27 @@ namespace EPocalipse.Json.JsonView
                     }
                 }
             }
+            treeView1.LabelEdit = false;
+            BindTree();
+
         }
 
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var node = treeView1.SelectedNode;
-            var pFolder = node.Tag as FolderManage;
-            node.Remove();
-            var deleteable = DbContext.DbClient.Deleteable(pFolder).ExecuteCommand();
+            try
+            {
+                var node = treeView1.SelectedNode;
+                var pFolder = node.Tag as FolderManage;
+                var restInfo = node.Tag as RestInfo;
+                node.Remove();
+                if (pFolder != null) DbContext.DbClient.Deleteable(pFolder).ExecuteCommand();
+                if (restInfo != null) DbContext.DbClient.Deleteable(restInfo).ExecuteCommand();
+                MessageBox.Show("删除成功！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "删除失败");
+            }
         }
 
         private void 重命名ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -470,10 +603,11 @@ namespace EPocalipse.Json.JsonView
             }
 
             isAddApi = true;
-            var pFolder = treeView1.SelectedNode.Tag as FolderManage;
+            var restInfo = treeView1.SelectedNode.Tag as RestInfo;
 
             var node1 = new TreeNode();
-            node1.Tag = pFolder;
+            node1.Tag = restInfo;
+            node1.ImageIndex = 1;
             node1.Text = "新建API";
             treeView1.SelectedNode.Nodes.Add(node1);
             treeView1.SelectedNode.Expand();
@@ -481,7 +615,6 @@ namespace EPocalipse.Json.JsonView
             node1.BeginEdit();
         }
 
-        private RestInfo _restInfo;
         //节点点击事件
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -494,6 +627,21 @@ namespace EPocalipse.Json.JsonView
                 richReqHeader.Text = resInfo.ReqHeader;
                 richReqBody.Text = resInfo.ReqBody;
                 cbMediaType.Text = resInfo.MediaType;
+
+                var ams = DbContext.DbClient.Queryable<AuthManage>().Where(s => s.Id == resInfo.AuthId);
+                if (ams != null && ams.Count() > 0)
+                {
+                    var am = ams.First();
+                    cbAuthType.Text = am.AuthType;
+                    txtUserName.Text = am.UserName;
+                    txtPassword.Text = am.Password;
+                }
+                else
+                {
+                    cbAuthType.Text = "";
+                    txtUserName.Text = "";
+                    txtPassword.Text = "";
+                }
                 _restInfo = resInfo;
             }
         }
@@ -501,7 +649,12 @@ namespace EPocalipse.Json.JsonView
         //保存请求信息
         private void button4_Click(object sender, EventArgs e)
         {
-            if (_restInfo == null) { MessageBox.Show("请选择要保存的节点"); return; }
+            if (_restInfo == null)
+            {
+                MessageBox.Show("请选择要保存的节点");
+                return;
+            }
+
             SaveRestInfo();
             MessageBox.Show("保存成功！");
         }
@@ -518,7 +671,44 @@ namespace EPocalipse.Json.JsonView
                 resInfo.ReqHeader = richReqHeader.Text;
                 resInfo.ReqBody = richReqBody.Text;
                 resInfo.MediaType = cbMediaType.Text;
+                var userName = txtUserName.Text;
+                var pwd = txtPassword.Text;
+
+                var ams = DbContext.DbClient.Queryable<AuthManage>().Where(s => s.Id == resInfo.AuthId);
+                int amId;
+                if (ams.Count() > 0)
+                {
+                    var am = ams.First();
+                    am.UserName = userName;
+                    am.Password = pwd;
+                    am.AuthType = cbAuthType.Text;
+                    amId = DbContext.DbClient.Updateable(am).ExecuteCommand();
+                }
+                else
+                {
+                    var am = new AuthManage
+                    {
+                        AuthType = cbAuthType.Text,
+                        UserName = userName,
+                        Password = pwd
+                    };
+                    amId = DbContext.DbClient.Insertable(am).ExecuteReturnIdentity();
+                }
+
+                resInfo.AuthId = amId;
                 DbContext.DbClient.Updateable(resInfo).ExecuteCommand();
+            }
+        }
+
+        private void treeView1_MouseUp(object sender, MouseEventArgs e)
+        {
+            TreeView treev = sender as TreeView;
+            Point point = treev.PointToClient(Cursor.Position);
+            TreeViewHitTestInfo info = treev.HitTest(point.X, point.Y);
+            TreeNode node = info.Node;//获得 右键点击的节点
+            if (node != null && MouseButtons.Right == e.Button)
+            {
+                treev.SelectedNode = node;//关键的一句话，右键点击菜单的时候，会选中右键点击的项
             }
         }
     }
