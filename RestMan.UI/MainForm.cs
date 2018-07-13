@@ -13,7 +13,7 @@ using RestMan.RestClient;
 using RestSharp;
 using RestSharp.Authenticators;
 
-namespace EPocalipse.Json.JsonView
+namespace RestMan.UI
 {
     public partial class MainForm : Form
     {
@@ -327,7 +327,7 @@ namespace EPocalipse.Json.JsonView
             Control c;
             c = JsonViewer.Controls.Find("tvJson", true)[0];
             var node = (JsonViewerTreeNode)((TreeView)c).SelectedNode;
-            if (node != null && node.JsonObject.Value != null) Clipboard.SetText(node.JsonObject.Value.ToString());
+            if (node?.JsonObject.Value != null) Clipboard.SetText(node.JsonObject.Value.ToString());
         }
 
 
@@ -450,23 +450,6 @@ namespace EPocalipse.Json.JsonView
                 MessageBox.Show(ex.Message, "请求失败，请检查配置信息");
             }
         }
-
-        public static void RunAsync(Action action)
-        {
-            ((Action)(delegate ()
-            {
-                action.Invoke();
-            })).BeginInvoke(null, null);
-        }
-
-        public void RunInMainthread(Action action)
-        {
-            this.BeginInvoke((Action)(delegate ()
-            {
-                action.Invoke();
-            }));
-        }
-
 
         private void 新增ToolStripMenuItem_Click(object sender, EventArgs e)
         {

@@ -8,8 +8,8 @@
     <ProjectGuid>{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EPocalipse.Json.JsonView</RootNamespace>
-    <AssemblyName>JsonView</AssemblyName>
+    <RootNamespace>RestMan.UI</RootNamespace>
+    <AssemblyName>RestMan</AssemblyName>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>

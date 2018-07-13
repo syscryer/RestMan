@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace EPocalipse.Json.JsonView
+namespace RestMan.UI
 {
     static class Program
     {

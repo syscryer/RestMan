@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Reflection;
+using System.Windows.Forms;
 
-namespace EPocalipse.Json.JsonView
+namespace RestMan.UI
 {
     partial class AboutJsonViewer : Form
     {

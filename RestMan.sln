@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonView", "JsonView\JsonView.csproj", "{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestMan.DbUtil", "RestMan.DbUtil\RestMan.DbUtil.csproj", "{1DC1C0CF-6DD3-4840-961C-05A8419C8B05}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestMan.RestClient", "RestMan.RestClient\RestMan.RestClient.csproj", "{C098BDA6-281B-49C0-840C-3FE834C7FA3A}"
@@ -19,16 +17,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonViewer", "JsonViewer\Js
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonVisualizer", "Visualizer\JsonVisualizer.csproj", "{32BEAE8D-282C-4414-9B7F-2F0E9450369A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestMan.UI", "RestMan.UI\RestMan.UI.csproj", "{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1DC1C0CF-6DD3-4840-961C-05A8419C8B05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1DC1C0CF-6DD3-4840-961C-05A8419C8B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DC1C0CF-6DD3-4840-961C-05A8419C8B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,6 +53,10 @@ Global
 		{32BEAE8D-282C-4414-9B7F-2F0E9450369A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32BEAE8D-282C-4414-9B7F-2F0E9450369A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32BEAE8D-282C-4414-9B7F-2F0E9450369A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D82889-66FA-41AC-932F-9AF3AE8EAA9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

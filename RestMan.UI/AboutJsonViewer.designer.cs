@@ -1,4 +1,4 @@
-namespace EPocalipse.Json.JsonView
+namespace RestMan.UI
 {
     partial class AboutJsonViewer
     {
