@@ -78,10 +78,11 @@ namespace RestMan.UI
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.richReqBody = new System.Windows.Forms.RichTextBox();
-            this.richReqHeader = new System.Windows.Forms.RichTextBox();
+            this.richCurrReqHeader = new System.Windows.Forms.RichTextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.lbResCode = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusState = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusUrl = new System.Windows.Forms.ToolStripStatusLabel();
             this.JsonViewer = new EPocalipse.Json.Viewer.JsonViewer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -89,7 +90,8 @@ namespace RestMan.UI
             this.richResHeader = new System.Windows.Forms.RichTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.richExcutReq = new System.Windows.Forms.RichTextBox();
-            this.toolStripStatusState = new System.Windows.Forms.ToolStripStatusLabel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -303,6 +305,7 @@ namespace RestMan.UI
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_AfterLabelEdit);
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
+            this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
             this.treeView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseUp);
             // 
             // contextMenuStrip1
@@ -352,15 +355,15 @@ namespace RestMan.UI
             // 
             // txtEndPoint
             // 
-            this.txtEndPoint.Location = new System.Drawing.Point(466, 31);
+            this.txtEndPoint.Location = new System.Drawing.Point(466, 34);
             this.txtEndPoint.Name = "txtEndPoint";
-            this.txtEndPoint.Size = new System.Drawing.Size(202, 21);
+            this.txtEndPoint.Size = new System.Drawing.Size(335, 21);
             this.txtEndPoint.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(210, 35);
+            this.label1.Location = new System.Drawing.Point(212, 38);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 12);
             this.label1.TabIndex = 2;
@@ -374,7 +377,7 @@ namespace RestMan.UI
             "GET",
             "PUT",
             "DELETE"});
-            this.cbMethod.Location = new System.Drawing.Point(273, 31);
+            this.cbMethod.Location = new System.Drawing.Point(273, 34);
             this.cbMethod.Name = "cbMethod";
             this.cbMethod.Size = new System.Drawing.Size(102, 20);
             this.cbMethod.TabIndex = 0;
@@ -382,7 +385,7 @@ namespace RestMan.UI
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(403, 35);
+            this.label2.Location = new System.Drawing.Point(403, 38);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(59, 12);
             this.label2.TabIndex = 4;
@@ -391,7 +394,7 @@ namespace RestMan.UI
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(708, 35);
+            this.label3.Location = new System.Drawing.Point(822, 38);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 12);
             this.label3.TabIndex = 5;
@@ -399,14 +402,14 @@ namespace RestMan.UI
             // 
             // txtResource
             // 
-            this.txtResource.Location = new System.Drawing.Point(773, 32);
+            this.txtResource.Location = new System.Drawing.Point(887, 34);
             this.txtResource.Name = "txtResource";
-            this.txtResource.Size = new System.Drawing.Size(232, 21);
+            this.txtResource.Size = new System.Drawing.Size(158, 21);
             this.txtResource.TabIndex = 2;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1072, 30);
+            this.button1.Location = new System.Drawing.Point(1072, 33);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(58, 23);
             this.button1.TabIndex = 7;
@@ -416,7 +419,7 @@ namespace RestMan.UI
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1145, 30);
+            this.button2.Location = new System.Drawing.Point(1145, 33);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(64, 23);
             this.button2.TabIndex = 8;
@@ -426,7 +429,7 @@ namespace RestMan.UI
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(210, 416);
+            this.label4.Location = new System.Drawing.Point(212, 411);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(71, 12);
             this.label4.TabIndex = 10;
@@ -439,7 +442,7 @@ namespace RestMan.UI
             "application/json",
             "application/xml",
             "text/xml"});
-            this.cbMediaType.Location = new System.Drawing.Point(286, 413);
+            this.cbMediaType.Location = new System.Drawing.Point(292, 408);
             this.cbMediaType.Name = "cbMediaType";
             this.cbMediaType.Size = new System.Drawing.Size(166, 20);
             this.cbMediaType.TabIndex = 11;
@@ -447,7 +450,7 @@ namespace RestMan.UI
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(210, 74);
+            this.label5.Location = new System.Drawing.Point(212, 76);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(59, 12);
             this.label5.TabIndex = 12;
@@ -460,21 +463,21 @@ namespace RestMan.UI
             "Basic",
             "NTLM",
             "OAuth2.0"});
-            this.cbAuthType.Location = new System.Drawing.Point(273, 68);
+            this.cbAuthType.Location = new System.Drawing.Point(273, 72);
             this.cbAuthType.Name = "cbAuthType";
             this.cbAuthType.Size = new System.Drawing.Size(86, 20);
             this.cbAuthType.TabIndex = 3;
             // 
             // txtUserName
             // 
-            this.txtUserName.Location = new System.Drawing.Point(419, 65);
+            this.txtUserName.Location = new System.Drawing.Point(419, 72);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(110, 21);
             this.txtUserName.TabIndex = 4;
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(592, 65);
+            this.txtPassword.Location = new System.Drawing.Point(592, 72);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(100, 21);
             this.txtPassword.TabIndex = 5;
@@ -482,7 +485,7 @@ namespace RestMan.UI
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(371, 71);
+            this.label6.Location = new System.Drawing.Point(371, 76);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(47, 12);
             this.label6.TabIndex = 16;
@@ -491,7 +494,7 @@ namespace RestMan.UI
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(551, 68);
+            this.label7.Location = new System.Drawing.Point(551, 76);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(35, 12);
             this.label7.TabIndex = 17;
@@ -499,7 +502,7 @@ namespace RestMan.UI
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(709, 65);
+            this.button3.Location = new System.Drawing.Point(709, 71);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 20;
@@ -508,7 +511,7 @@ namespace RestMan.UI
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(1145, 74);
+            this.button4.Location = new System.Drawing.Point(1145, 71);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(58, 23);
             this.button4.TabIndex = 21;
@@ -524,18 +527,18 @@ namespace RestMan.UI
             this.richReqBody.TabIndex = 23;
             this.richReqBody.Text = "";
             // 
-            // richReqHeader
+            // richCurrReqHeader
             // 
-            this.richReqHeader.Location = new System.Drawing.Point(212, 114);
-            this.richReqHeader.Name = "richReqHeader";
-            this.richReqHeader.Size = new System.Drawing.Size(418, 293);
-            this.richReqHeader.TabIndex = 24;
-            this.richReqHeader.Text = "";
+            this.richCurrReqHeader.Location = new System.Drawing.Point(212, 125);
+            this.richCurrReqHeader.Name = "richCurrReqHeader";
+            this.richCurrReqHeader.Size = new System.Drawing.Size(418, 274);
+            this.richCurrReqHeader.TabIndex = 24;
+            this.richCurrReqHeader.Text = "";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(637, 271);
+            this.label8.Location = new System.Drawing.Point(637, 275);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(53, 12);
             this.label8.TabIndex = 25;
@@ -544,7 +547,7 @@ namespace RestMan.UI
             // lbResCode
             // 
             this.lbResCode.AutoSize = true;
-            this.lbResCode.Location = new System.Drawing.Point(697, 271);
+            this.lbResCode.Location = new System.Drawing.Point(697, 275);
             this.lbResCode.Name = "lbResCode";
             this.lbResCode.Size = new System.Drawing.Size(17, 12);
             this.lbResCode.TabIndex = 26;
@@ -561,6 +564,12 @@ namespace RestMan.UI
             this.statusStrip1.TabIndex = 27;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripStatusState
+            // 
+            this.toolStripStatusState.Name = "toolStripStatusState";
+            this.toolStripStatusState.Size = new System.Drawing.Size(32, 17);
+            this.toolStripStatusState.Text = "状态";
+            // 
             // toolStripStatusUrl
             // 
             this.toolStripStatusUrl.Name = "toolStripStatusUrl";
@@ -576,17 +585,17 @@ namespace RestMan.UI
             this.JsonViewer.Json = "";
             this.JsonViewer.Location = new System.Drawing.Point(636, 297);
             this.JsonViewer.Name = "JsonViewer";
-            this.JsonViewer.Size = new System.Drawing.Size(593, 453);
+            this.JsonViewer.Size = new System.Drawing.Size(590, 453);
             this.JsonViewer.TabIndex = 5;
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(639, 94);
+            this.tabControl1.Location = new System.Drawing.Point(636, 103);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(590, 174);
+            this.tabControl1.Size = new System.Drawing.Size(593, 165);
             this.tabControl1.TabIndex = 28;
             // 
             // tabPage1
@@ -595,7 +604,7 @@ namespace RestMan.UI
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(582, 148);
+            this.tabPage1.Size = new System.Drawing.Size(585, 139);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "响应头";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -605,7 +614,7 @@ namespace RestMan.UI
             this.richResHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richResHeader.Location = new System.Drawing.Point(3, 3);
             this.richResHeader.Name = "richResHeader";
-            this.richResHeader.Size = new System.Drawing.Size(576, 142);
+            this.richResHeader.Size = new System.Drawing.Size(579, 133);
             this.richResHeader.TabIndex = 23;
             this.richResHeader.Text = "";
             // 
@@ -615,7 +624,7 @@ namespace RestMan.UI
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(582, 148);
+            this.tabPage2.Size = new System.Drawing.Size(585, 139);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "请求头";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -625,26 +634,40 @@ namespace RestMan.UI
             this.richExcutReq.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richExcutReq.Location = new System.Drawing.Point(3, 3);
             this.richExcutReq.Name = "richExcutReq";
-            this.richExcutReq.Size = new System.Drawing.Size(576, 142);
+            this.richExcutReq.Size = new System.Drawing.Size(579, 133);
             this.richExcutReq.TabIndex = 24;
             this.richExcutReq.Text = "";
             // 
-            // toolStripStatusState
+            // label9
             // 
-            this.toolStripStatusState.Name = "toolStripStatusState";
-            this.toolStripStatusState.Size = new System.Drawing.Size(32, 17);
-            this.toolStripStatusState.Text = "状态";
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(212, 104);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(89, 12);
+            this.label9.TabIndex = 29;
+            this.label9.Text = "自定义请求头：";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(212, 436);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(65, 12);
+            this.label10.TabIndex = 30;
+            this.label10.Text = "请求Body：";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1229, 761);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.lbResCode);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.richReqHeader);
+            this.Controls.Add(this.richCurrReqHeader);
             this.Controls.Add(this.richReqBody);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -737,7 +760,7 @@ namespace RestMan.UI
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.RichTextBox richReqBody;
-        private System.Windows.Forms.RichTextBox richReqHeader;
+        private System.Windows.Forms.RichTextBox richCurrReqHeader;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lbResCode;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -748,6 +771,8 @@ namespace RestMan.UI
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.RichTextBox richExcutReq;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusState;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
     }
 }
 

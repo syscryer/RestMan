@@ -340,7 +340,15 @@ namespace RestMan.UI
         {
             try
             {
+                //初始化状态
                 toolStripStatusState.Text = "请求中...";
+                lbResCode.Text = "请求中...";
+                lbResCode.ForeColor = Color.Black;
+                Control c = JsonViewer.Controls.Find("txtJson", true)[0];
+                ((TextBox)c)?.Clear();
+                richResHeader.Clear();
+                richExcutReq.Clear();
+
                 var endPoint = txtEndPoint.Text.Trim();
                 var resource = txtResource.Text.Trim();
                 var reqbody = richReqBody.Text;
@@ -348,7 +356,11 @@ namespace RestMan.UI
                 var pwd = txtPassword.Text.Trim();
                 var authType = cbAuthType.Text;
                 var mediaType = cbMediaType.Text;
+
+                //保存请求数据
                 SaveRestInfo();
+
+                //认证
                 IAuthenticator iaAuthenticator;
                 if (authType == "NTLM")
                 {
@@ -376,7 +388,7 @@ namespace RestMan.UI
                 IRestRequest iRequest = new RestRequest(new Uri(endPoint + resource));
                 iRequest.Method = (Method)Enum.Parse(typeof(Method), cbMethod.Text);
 
-                foreach (var line in richReqHeader.Lines)
+                foreach (var line in richCurrReqHeader.Lines)
                 {
                     var val = line.Trim();
                     if (val.Contains(":"))
@@ -386,12 +398,10 @@ namespace RestMan.UI
                         var value = val.Substring(firstIndex + 1, val.Length - firstIndex - 1);
                         iRequest.AddHeader(key, value);
                     }
-                    else if (string.IsNullOrEmpty(val))
-                    {
-                    }
                     else
                     {
                         MessageBox.Show("填写的请求头参数不正确");
+                        break;
                     }
                 }
 
@@ -400,7 +410,6 @@ namespace RestMan.UI
                     iRequest.AddParameter(mediaType, reqbody, ParameterType.RequestBody);
                 }
                 //var iResponse = iRestSharp.Execute(iRequest);
-
 
                 var asyncHandle = iRestSharp.ExecuteAsync(iRequest, response =>
                 {
@@ -607,7 +616,7 @@ namespace RestMan.UI
                 cbMethod.Text = resInfo.Method;
                 txtEndPoint.Text = resInfo.EndPoint;
                 txtResource.Text = resInfo.Resource;
-                richReqHeader.Text = resInfo.ReqHeader;
+                richCurrReqHeader.Text = resInfo.ReqHeader;
                 richReqBody.Text = resInfo.ReqBody;
                 cbMediaType.Text = resInfo.MediaType;
 
@@ -651,7 +660,7 @@ namespace RestMan.UI
                 resInfo.Method = cbMethod.Text;
                 resInfo.EndPoint = txtEndPoint.Text;
                 resInfo.Resource = txtResource.Text;
-                resInfo.ReqHeader = richReqHeader.Text;
+                resInfo.ReqHeader = richCurrReqHeader.Text;
                 resInfo.ReqBody = richReqBody.Text;
                 resInfo.MediaType = cbMediaType.Text;
                 var userName = txtUserName.Text;
@@ -685,6 +694,11 @@ namespace RestMan.UI
 
         private void treeView1_MouseUp(object sender, MouseEventArgs e)
         {
+
+        }
+
+        private void treeView1_MouseDown(object sender, MouseEventArgs e)
+        {
             TreeView treev = sender as TreeView;
             Point point = treev.PointToClient(Cursor.Position);
             TreeViewHitTestInfo info = treev.HitTest(point.X, point.Y);
@@ -692,6 +706,24 @@ namespace RestMan.UI
             if (node != null && MouseButtons.Right == e.Button)
             {
                 treev.SelectedNode = node;//关键的一句话，右键点击菜单的时候，会选中右键点击的项
+                //TreeNode selectNode = treeView1.GetNodeAt(e.X, e.Y);
+                if (node.Tag is RestInfo)
+                {
+                    foreach (ToolStripMenuItem item in contextMenuStrip1.Items)
+                    {
+                        if (item.Text == "新增API" || item.Text == "新增文件夹")
+                        {
+                            item.Visible = false;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (ToolStripMenuItem item in contextMenuStrip1.Items)
+                    {
+                        item.Visible = true;
+                    }
+                }
             }
         }
     }
