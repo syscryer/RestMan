@@ -1,25 +1,7 @@
-The JSON View package is a set of 3 viewers available in the following flavors:
-1) A standalone viewer - JsonView.exe
-2) A plugin for Fiddler 2 (http://www.fiddler2.com/) - FiddlerJsonViewer.dll
-3) A visualizer for Viusal Studio 2005  - JsonVisualizer.dll
+平时使用PostMan时感觉还是不太方便，很多功能也用不上，就抽空写了个简单工具，供日常使用，比PostMan更加便捷
 
-The viewer supports plugins to allow you to customize the way JSON objects are displayed. Sample plugins 
-are provided within the source.
+里面有借用到JsonViewer项目，请求完数据之后，可以直接看到可视化的JSON
 
-Installation
-============
+很多功能还未完成有空再开发，比如请求类别只实现了JSON、身份验证、导出配置文件、上传下载附件等等
 
-The archive contains the following directories:
-\JsonView
-\Fiddler
-\Visualizer
-
-- To use the standalone viewer, run JsonView.exe from \JsonView
-- To use the Fiddler2 plugin, copy the files from the \Fiddler directory to fiddler's \Inspectors 
-  directory and add the following to the <runtime> section of the fiddler.exe.config:
-- To use the Visual Studio Visualizer, copy the JsonVisualizer.dll to the Visual Studio Visualizers 
-  directory (usually under \My Documents\Visual Studio 2005\Visualizers) and copy the following files
-  to the IDE directory of Visual Studio (Where devenv.exe is located - <Visual Studio>\Common7\IDE):
-  - JsonViewer.dll
-  - JsonViewer.dll.config
-  - Newtonsoft.Json.dll
+请将RestMan.UI项目下的DB文件夹复制到bin目录，以便初始化数据
